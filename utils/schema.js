@@ -12,3 +12,17 @@ export const MockInterview= pgTable('mockInterview',{
     createdAt:text('createdAt'),
     mockId:varchar('mockId').notNull()
 })
+
+// npm run db:push
+// npm run db:studio
+export const UserAnswer=pgTable('userAnswer',{
+    id:serial('id').primaryKey(),
+    mockIdRef:varchar('mockId').notNull(),
+    question:varchar('question').notNull(),
+    correctAns:text('correctAns'),
+    userAns:text('userAns'),
+    feedback:text('feedback'),
+    rating:varchar('rating'),
+    userEmail:varchar('userEmail'),
+    createdAt:varchar('createdAt'),
+})
