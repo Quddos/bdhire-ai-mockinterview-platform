@@ -11,6 +11,25 @@ import { UserButton } from '@clerk/nextjs'
 import { useAuth } from '@clerk/nextjs'
 import { usePathname } from 'next/navigation'
 
+const CursorIcon = () => (
+  <svg 
+    width="20" 
+    height="20" 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    xmlns="http://www.w3.org/2000/svg"
+    className="animate-bounce"
+  >
+    <path 
+      d="M5.08042 12.6101L19.1794 3.89797C19.9307 3.45257 20.8559 4.06576 20.7488 4.91697L18.8836 19.1695C18.7695 20.0724 17.6876 20.3459 17.1953 19.5816L13.9861 14.5552C13.7945 14.2623 13.4523 14.0878 13.0859 14.0878H9.54731C8.9201 14.0878 8.46924 13.4502 8.71259 12.8734L9.89781 10.1051C10.0461 9.75009 10.0461 9.35008 9.89781 8.99507L5.08042 12.6101ZM5.08042 12.6101L10.9607 8.99507" 
+      stroke="currentColor" 
+      strokeWidth="1.5" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    />
+  </svg>
+)
+
 export default function Header() {
   const { isSignedIn } = useAuth()
   const pathname = usePathname()
@@ -103,14 +122,18 @@ export default function Header() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2 relative">
             <Image
               src="/qudmeet.png"
               alt="Qudmeet Logo"
               width={40}
               height={40}
-              className="rounded-full" />
+              className="rounded-full"
+            />
             <span className="text-xl font-bold">Qudmeet</span>
+            <div className="absolute -right-4 top-0">
+              <CursorIcon />
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
