@@ -181,17 +181,23 @@ export default function Header() {
                 )}
               </AnimatePresence>
             </div>
-            {isSignedIn && (
-              <Link
-                href="/dashboard"
-                className={cn(
-                  'px-3 py-2 text-sm font-medium rounded-md transition-colors relative',
-                  isActive('/dashboard') ? activeButtonClass : inactiveButtonClass
-                )}>
-                Dashboard
-              </Link>
+            {isSignedIn ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  className={cn(
+                    'px-3 py-2 text-sm font-medium rounded-md transition-colors relative',
+                    isActive('/dashboard') ? activeButtonClass : inactiveButtonClass
+                  )}>
+                  Dashboard
+                </Link>
+                <UserButton afterSignOutUrl="/" />
+              </>
+            ) : (
+              <Button variant="default" asChild>
+                <Link href="/sign-in">Login</Link>
+              </Button>
             )}
-            <UserButton afterSignOutUrl="/" />
           </nav>
 
           {/* Mobile menu button */}
