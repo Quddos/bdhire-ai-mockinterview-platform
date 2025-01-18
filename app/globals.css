@@ -112,3 +112,17 @@ main {
   animation: gradient 3s ease infinite;
   background-size: 200% 200%;
 }
+
+.bg-gradient-animate {
+  background-size: 400% 400%;
+  animation: gradient-xy 15s ease infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}

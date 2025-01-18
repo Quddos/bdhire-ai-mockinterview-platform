@@ -96,6 +96,16 @@ module.exports = {
             'animation-timing-function': 'cubic-bezier(0, 0, 0.2, 1)',
           },
         },
+        'gradient-xy': {
+          '0%, 100%': {
+            'background-size': '400% 400%',
+            'background-position': 'left center'
+          },
+          '50%': {
+            'background-size': '200% 200%',
+            'background-position': 'right center'
+          }
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -103,6 +113,7 @@ module.exports = {
         'roll': 'roll 0.4s ease-out forwards',
         'gradient': 'gradient 3s ease infinite',
         'bounce': 'bounce 1s infinite',
+        'gradient-xy': 'gradient-xy 15s ease infinite',
       },
     },
   },
