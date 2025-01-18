@@ -116,8 +116,10 @@ export default function Header() {
     <header
       ref={headerRef}
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white/80 backdrop-blur-md shadow-sm',
-        isScrolled ? 'shadow-md' : ''
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+        isScrolled 
+          ? 'bg-gradient-to-r from-white/80 via-blue-50/80 to-white/80 backdrop-blur-md shadow-sm' 
+          : 'bg-gradient-to-r from-white via-blue-50/50 to-white'
       )}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
@@ -131,9 +133,13 @@ export default function Header() {
               className="rounded-full"
             />
             <span className="text-xl font-bold">Qudmeet</span>
+            <span className="text-xs text-blue-500 font-bold">.click</span>
+            
             <div className="absolute -right-4 top-0">
+             
               <CursorIcon />
             </div>
+            
           </Link>
 
           {/* Desktop Navigation */}

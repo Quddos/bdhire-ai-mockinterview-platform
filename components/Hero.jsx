@@ -56,37 +56,58 @@ const services = [
   {
     icon: QrCode,
     name: "QR Code",
-    href: "#qr-code",
+    href: "/tools/qrcode",
     bgColor: "bg-blue-100",
     iconColor: "text-blue-600"
   },
   {
     icon: Bot,
     name: "AI Interview",
-    href: "#ai-interview",
+    href: "/dashboard",
     bgColor: "bg-purple-100",
     iconColor: "text-purple-600"
   },
   {
     icon: FileText,
     name: "File Convert",
-    href: "#file-convert",
+    href: "/tools/converter",
     bgColor: "bg-green-100",
     iconColor: "text-green-600"
   },
   {
     icon: GraduationCap,
     name: "Learning",
-    href: "#learning",
+    href: "/learning",
     bgColor: "bg-yellow-100",
     iconColor: "text-yellow-600"
   },
   {
     icon: Briefcase,
     name: "Job Board",
-    href: "#job-board",
+    href: "/jobs",
     bgColor: "bg-pink-100",
     iconColor: "text-pink-600"
+  },
+  {
+    icon: Bot,
+    name: "AI Chat",
+    href: "/tools/chat",
+    bgColor: "bg-indigo-100",
+    iconColor: "text-indigo-600"
+  },
+  {
+    icon: FileText,
+    name: "Resume Builder",
+    href: "/tools/resume",
+    bgColor: "bg-orange-100",
+    iconColor: "text-orange-600"
+  },
+  {
+    icon: GraduationCap,
+    name: "Courses",
+    href: "/courses",
+    bgColor: "bg-teal-100",
+    iconColor: "text-teal-600"
   }
 ]
 
