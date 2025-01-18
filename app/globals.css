@@ -74,3 +74,41 @@
       @apply bg-background text-foreground;
     }
   }
+
+main {
+  padding-top: 4rem; /* Adds space for fixed header */
+}
+
+/* Add animation styles */
+@keyframes roll {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+.animate-roll {
+  animation: roll 0.4s ease-out forwards;
+}
+
+/* Add gradient animation */
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.before\:bg-gradient-animate::before {
+  animation: gradient 3s ease infinite;
+  background-size: 200% 200%;
+}

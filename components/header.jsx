@@ -7,8 +7,13 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { QrCode, FileText, Bot, Menu, X, Briefcase, GraduationCap, Users } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { UserButton } from '@clerk/nextjs'
+import { useAuth } from '@clerk/nextjs'
+import { usePathname } from 'next/navigation'
 
 export default function Header() {
+  const { isSignedIn } = useAuth()
+  const pathname = usePathname()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isToolsOpen, setIsToolsOpen] = useState(false)
   const [isOp2unityOpen, setIsOp2unityOpen] = useState(false)
@@ -78,19 +83,29 @@ export default function Header() {
     }
   ]
 
+  const isActive = (path) => {
+    if (path === '/dashboard') {
+      return pathname === path
+    }
+    return pathname.startsWith(path)
+  }
+
+  const activeButtonClass = "relative before:absolute before:inset-x-0 before:bottom-0 before:h-0.5 before:bg-gradient-to-r before:from-blue-400 before:via-purple-500 before:to-pink-500 before:transform before:origin-left before:scale-x-100 before:-z-10 before:animate-roll text-blue-600"
+  const inactiveButtonClass = "hover:bg-gray-100 transition-colors"
+
   return (
-    (<header
+    <header
       ref={headerRef}
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-        isScrolled ? 'bg-white/80 backdrop-blur-md shadow-sm' : 'bg-white'
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white/80 backdrop-blur-md shadow-sm',
+        isScrolled ? 'shadow-md' : ''
       )}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Image
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-8ABIEyx7YChsbV6EGDrCU0ga8enwAs.png"
+              src="/qudmeet.png"
               alt="Qudmeet Logo"
               width={40}
               height={40}
@@ -100,7 +115,7 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <div className="relative">
+            <div className="relative group">
               <button
                 onClick={() => {
                   setIsToolsOpen(!isToolsOpen)
@@ -111,26 +126,37 @@ export default function Header() {
                   setIsOp2unityOpen(false)
                 }}
                 className={cn(
-                  'px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-colors',
-                  isToolsOpen && 'bg-gray-100'
+                  'px-3 py-2 text-sm font-medium rounded-md transition-colors relative',
+                  isActive('/tools') ? activeButtonClass : inactiveButtonClass
                 )}>
                 Tools
               </button>
               <AnimatePresence>
-                {isToolsOpen && <DropdownMenu items={tools} onClose={() => setIsToolsOpen(false)} />}
+                {isToolsOpen && (
+                  <DropdownMenu 
+                    items={tools} 
+                    onClose={() => setIsToolsOpen(false)} 
+                  />
+                )}
               </AnimatePresence>
             </div>
             <Link
               href="/about"
-              className="text-sm font-medium text-gray-700 hover:text-gray-900">
+              className={cn(
+                'px-3 py-2 text-sm font-medium rounded-md transition-colors relative',
+                isActive('/about') ? activeButtonClass : inactiveButtonClass
+              )}>
               About
             </Link>
             <Link
               href="/sponsor"
-              className="text-sm font-medium text-gray-700 hover:text-gray-900">
+              className={cn(
+                'px-3 py-2 text-sm font-medium rounded-md transition-colors relative',
+                isActive('/sponsor') ? activeButtonClass : inactiveButtonClass
+              )}>
               Sponsor Us
             </Link>
-            <div className="relative">
+            <div className="relative group">
               <button
                 onClick={() => {
                   setIsOp2unityOpen(!isOp2unityOpen)
@@ -141,18 +167,31 @@ export default function Header() {
                   setIsToolsOpen(false)
                 }}
                 className={cn(
-                  'px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100 transition-colors',
-                  isOp2unityOpen && 'bg-gray-100'
+                  'px-3 py-2 text-sm font-medium rounded-md transition-colors relative',
+                  isActive('/opportunities') ? activeButtonClass : inactiveButtonClass
                 )}>
                 Op2unity
               </button>
               <AnimatePresence>
-                {isOp2unityOpen && <DropdownMenu items={opportunities} onClose={() => setIsOp2unityOpen(false)} />}
+                {isOp2unityOpen && (
+                  <DropdownMenu 
+                    items={opportunities} 
+                    onClose={() => setIsOp2unityOpen(false)} 
+                  />
+                )}
               </AnimatePresence>
             </div>
-            <Button variant="default" asChild>
-              <Link href="/login">Login</Link>
-            </Button>
+            {isSignedIn && (
+              <Link
+                href="/dashboard"
+                className={cn(
+                  'px-3 py-2 text-sm font-medium rounded-md transition-colors relative',
+                  isActive('/dashboard') ? activeButtonClass : inactiveButtonClass
+                )}>
+                Dashboard
+              </Link>
+            )}
+            <UserButton afterSignOutUrl="/" />
           </nav>
 
           {/* Mobile menu button */}
@@ -226,17 +265,30 @@ export default function Header() {
                     </div>
                   )}
                 </div>
-                <div className="pt-2">
-                  <Button variant="default" className="w-full" asChild>
-                    <Link href="/login">Login</Link>
-                  </Button>
-                </div>
+                {isSignedIn ? (
+                  <>
+                    <div className="pt-2">
+                      <Button variant="default" className="w-full" asChild>
+                        <Link href="/dashboard">Dashboard</Link>
+                      </Button>
+                    </div>
+                    <div className="pt-2">
+                      <UserButton afterSignOutUrl="/" />
+                    </div>
+                  </>
+                ) : (
+                  <div className="pt-2">
+                    <Button variant="default" className="w-full" asChild>
+                      <Link href="/sign-in">Login</Link>
+                    </Button>
+                  </div>
+                )}
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
-    </header>)
+    </header>
   );
 }
 
@@ -245,7 +297,7 @@ function DropdownMenu({
   onClose
 }) {
   return (
-    (<motion.div
+    <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
@@ -274,7 +326,7 @@ function DropdownMenu({
           </div>
         </div>
       </div>
-    </motion.div>)
+    </motion.div>
   );
 }
 

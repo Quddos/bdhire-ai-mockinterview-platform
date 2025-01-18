@@ -66,12 +66,34 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        roll: {
+          '0%': { 
+            transform: 'scaleX(0)',
+            opacity: '0'
+          },
+          '100%': { 
+            transform: 'scaleX(1)',
+            opacity: '1'
+          }
+        },
+        gradient: {
+          '0%, 100%': {
+            'background-size': '200% 200%',
+            'background-position': 'left center'
+          },
+          '50%': {
+            'background-size': '200% 200%',
+            'background-position': 'right center'
+          }
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        'roll': 'roll 0.4s ease-out forwards',
+        'gradient': 'gradient 3s ease infinite'
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [],
 }
