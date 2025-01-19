@@ -4,6 +4,9 @@ import { motion } from 'framer-motion'
 import { QrCode, FileText, Bot, GraduationCap, Briefcase } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import FileConverterModal from './FileConverterModal'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 const MouseIcon = () => (
   <motion.svg
@@ -112,92 +115,110 @@ const services = [
 ]
 
 export default function Hero() {
-  return (
-    <div className="relative min-h-[90vh] overflow-hidden">
-      {/* Animated gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-green-200 via-cyan-200 to-blue-300 animate-gradient-xy" />
+  const [isConverterOpen, setIsConverterOpen] = useState(false)
+  const router = useRouter()
 
-      <div className="relative container mx-auto px-4 pt-16 pb-8 flex flex-col min-h-[90vh]">
-        <div className="grid lg:grid-cols-2 gap-8 items-center flex-grow">
-          {/* Left column with Avatar */}
-          <div className="relative">
-            <div className="w-full max-w-md mx-auto">
-              <img
-                src="/helloai.gif"
-                alt="AI Avatar"
-                className="rounded-3xl w-full h-auto"
-              />
+  const handleServiceClick = (href, service) => {
+    if (service === 'File Convert') {
+      setIsConverterOpen(true)
+    } else {
+      router.push(href)
+    }
+  }
+
+  return (
+    <>
+      <div className="relative min-h-[90vh] overflow-hidden">
+        {/* Animated gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-green-200 via-cyan-200 to-blue-300 animate-gradient-xy" />
+
+        <div className="relative container mx-auto px-4 pt-16 pb-8 flex flex-col min-h-[90vh]">
+          <div className="grid lg:grid-cols-2 gap-8 items-center flex-grow">
+            {/* Left column with Avatar */}
+            <div className="relative">
+              <div className="w-full max-w-md mx-auto">
+                <img
+                  src="/helloai.gif"
+                  alt="AI Avatar"
+                  className="rounded-3xl w-full h-auto"
+                />
+              </div>
+            </div>
+
+            {/* Right column with Text and CTA */}
+            <div className="text-center lg:text-left">
+              <motion.h1 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-5xl md:text-6xl font-bold mb-6"
+              >
+                Click<MouseIcon />Into
+                <br />
+                New World of <span className="text-blue-600">Opportunity</span>
+              </motion.h1>
+              
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="text-xl text-gray-600 mb-8"
+              >
+                A breakthrough of AI Powered Platform design to help you Secure a new world of
+                <span className="font-semibold"> Op2unity </span>
+                You Aspired.
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <Button 
+                  className="px-8 py-6 text-lg font-semibold rounded-full bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 hover:opacity-90 transition-opacity"
+                >
+                  Click into new Career
+                </Button>
+              </motion.div>
             </div>
           </div>
 
-          {/* Right column with Text and CTA */}
-          <div className="text-center lg:text-left">
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-5xl md:text-6xl font-bold mb-6"
-            >
-              Click<MouseIcon />Into
-              <br />
-              New World of <span className="text-blue-600">Opportunity</span>
-            </motion.h1>
-            
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-xl text-gray-600 mb-8"
-            >
-              A breakthrough of AI Powered Platform design to help you Secure a new world of
-              <span className="font-semibold"> Op2unity </span>
-              You Aspired.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <Button 
-                className="px-8 py-6 text-lg font-semibold rounded-full bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 hover:opacity-90 transition-opacity"
-              >
-                Click into new Career
-              </Button>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Marquee Services - Positioned at bottom with less spacing */}
-        <div className="mt-8">
-          <div className="relative">
-            <div className="absolute left-0 h-full w-px bg-gray-200" />
-            <div className="overflow-hidden">
-              <motion.div
-                animate={{ x: ["100%", "-100%"] }}
-                transition={{
-                  duration: 20,
-                  repeat: Infinity,
-                  ease: "linear"
-                }}
-                className="flex gap-12 items-center"
-              >
-                {services.map((service, index) => (
-                  <Link
-                    key={index}
-                    href={service.href}
-                    className="flex flex-col items-center group"
-                  >
-                    <div className={`w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-xl ${service.bgColor} transition-transform group-hover:scale-110 shadow-lg`}>
-                      <service.icon className={`w-7 h-7 md:w-8 md:h-8 ${service.iconColor}`} />
+          {/* Marquee Services - Positioned at bottom with less spacing */}
+          <div className="mt-8">
+            <div className="relative">
+              <div className="absolute left-0 h-full w-px bg-gray-200" />
+              <div className="overflow-hidden">
+                <motion.div
+                  animate={{ x: ["100%", "-100%"] }}
+                  transition={{
+                    duration: 20,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                  className="flex gap-12 items-center"
+                >
+                  {services.map((service, index) => (
+                    <div
+                      key={index}
+                      onClick={() => handleServiceClick(service.href, service.name)}
+                      className="flex flex-col items-center group cursor-pointer"
+                    >
+                      <div className={`w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-xl ${service.bgColor} transition-transform group-hover:scale-110 shadow-lg`}>
+                        <service.icon className={`w-7 h-7 md:w-8 md:h-8 ${service.iconColor}`} />
+                      </div>
+                      <span className="mt-2 text-sm font-medium">{service.name}</span>
                     </div>
-                    <span className="mt-2 text-sm font-medium">{service.name}</span>
-                  </Link>
-                ))}
-              </motion.div>
+                  ))}
+                </motion.div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      
+      <FileConverterModal 
+        isOpen={isConverterOpen} 
+        onClose={() => setIsConverterOpen(false)} 
+      />
+    </>
   )
 } 

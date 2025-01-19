@@ -177,14 +177,7 @@ export default function Header() {
               )}>
               About
             </Link>
-            <Link
-              href="/sponsor"
-              className={cn(
-                'px-3 py-2 text-sm font-medium rounded-md transition-colors relative',
-                isActive('/sponsor') ? activeButtonClass : inactiveButtonClass
-              )}>
-              Sponsor Us
-            </Link>
+            
             <div className="relative group">
               <button
                 onClick={() => {
@@ -210,6 +203,14 @@ export default function Header() {
                 )}
               </AnimatePresence>
             </div>
+            <Link
+              href="/sponsor"
+              className={cn(
+                'px-3 py-2 text-sm font-medium rounded-md transition-colors relative',
+                isActive('/sponsor') ? activeButtonClass : inactiveButtonClass
+              )}>
+              Sponsor Us
+            </Link>
             {isSignedIn ? (
               <>
                 <Link

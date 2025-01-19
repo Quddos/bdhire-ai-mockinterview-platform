@@ -1,14 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { Upload, Download, FileType, X } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Upload, X, FileType, Download } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { FFmpeg } from '@ffmpeg/ffmpeg'
 import { fetchFile, toBlobURL } from '@ffmpeg/util'
-import Header from '@/components/header'
 
-export default function ConverterPage() {
+export default function FileConverterModal({ isOpen, onClose }) {
   const [ffmpeg, setFfmpeg] = useState(null)
   const [loaded, setLoaded] = useState(false)
   const [file, setFile] = useState(null)
@@ -20,6 +19,7 @@ export default function ConverterPage() {
     const load = async () => {
       const ffmpegInstance = new FFmpeg()
       try {
+        // Load ffmpeg.wasm-core script
         const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.4/dist/umd'
         await ffmpegInstance.load({
           coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
@@ -56,13 +56,18 @@ export default function ConverterPage() {
       const inputFileName = 'input_file'
       const outputFileName = `output_file${outputFormat}`
       
+      // Write the file to FFmpeg's file system
       await ffmpeg.writeFile(inputFileName, await fetchFile(file))
+      
+      // Run the FFmpeg command
       await ffmpeg.exec(['-i', inputFileName, outputFileName])
       
+      // Read the output file
       const data = await ffmpeg.readFile(outputFileName)
       const blob = new Blob([data.buffer], { type: `${file.type}` })
       setConvertedFile(URL.createObjectURL(blob))
       
+      // Clean up
       await ffmpeg.deleteFile(inputFileName)
       await ffmpeg.deleteFile(outputFileName)
     } catch (error) {
@@ -72,29 +77,33 @@ export default function ConverterPage() {
     }
   }
 
-  const resetConverter = () => {
-    setFile(null)
-    setOutputFormat('')
-    setConvertedFile(null)
-  }
-
   return (
-    <>
-      <Header />
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div className="container mx-auto px-4 pt-24 pb-12">
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+          onClick={onClose}
+        >
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="max-w-2xl mx-auto"
+            initial={{ scale: 0.95 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0.95 }}
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-2xl p-6 w-full max-w-md"
           >
-            <h1 className="text-4xl font-bold text-center mb-8">
-              File Converter
-            </h1>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold">File Converter</h2>
+              <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
 
-            <div className="bg-white rounded-2xl shadow-xl p-6 space-y-6">
-              {/* File Upload Section */}
-              <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center">
+            <div className="space-y-6">
+              {/* File Upload */}
+              <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center">
                 <input
                   type="file"
                   onChange={handleFileChange}
@@ -105,46 +114,21 @@ export default function ConverterPage() {
                   htmlFor="file-upload"
                   className="cursor-pointer flex flex-col items-center"
                 >
-                  {file ? (
-                    <div className="flex items-center space-x-2">
-                      <FileType className="w-8 h-8 text-blue-500" />
-                      <span className="text-lg font-medium">{file.name}</span>
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault()
-                          resetConverter()
-                        }}
-                        className="p-1 hover:bg-gray-100 rounded-full"
-                      >
-                        <X className="w-5 h-5 text-gray-500" />
-                      </button>
-                    </div>
-                  ) : (
-                    <>
-                      <Upload className="w-12 h-12 text-gray-400 mb-2" />
-                      <span className="text-sm text-gray-500">
-                        Click to upload or drag and drop
-                      </span>
-                      <span className="text-xs text-gray-400 mt-1">
-                        Supports video, audio, and image files
-                      </span>
-                    </>
-                  )}
+                  <Upload className="w-12 h-12 text-gray-400 mb-2" />
+                  <span className="text-sm text-gray-500">
+                    {file ? file.name : 'Click to upload or drag and drop'}
+                  </span>
                 </label>
               </div>
 
               {/* Format Selection */}
               {file && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="space-y-3"
-                >
+                <div className="space-y-3">
                   <label className="block text-sm font-medium">Convert to:</label>
                   <select
                     value={outputFormat}
                     onChange={(e) => setOutputFormat(e.target.value)}
-                    className="w-full p-2 border rounded-lg bg-white"
+                    className="w-full p-2 border rounded-lg"
                   >
                     <option value="">Select format</option>
                     {Object.entries(supportedFormats).map(([category, formats]) => (
@@ -157,46 +141,36 @@ export default function ConverterPage() {
                       </optgroup>
                     ))}
                   </select>
-                </motion.div>
+                </div>
               )}
 
               {/* Convert Button */}
               {file && outputFormat && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
+                <Button
+                  onClick={convertFile}
+                  disabled={converting}
+                  className="w-full py-6 text-lg font-semibold rounded-xl bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500"
                 >
-                  <Button
-                    onClick={convertFile}
-                    disabled={converting || !loaded}
-                    className="w-full py-6 text-lg font-semibold rounded-xl bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 text-white hover:opacity-90"
-                  >
-                    {converting ? 'Converting...' : 'Qudmeet Convert Click'}
-                  </Button>
-                </motion.div>
+                  {converting ? 'Converting...' : 'Qudmeet Convert Click'}
+                </Button>
               )}
 
               {/* Download Button */}
               {convertedFile && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
+                <Button
+                  asChild
+                  className="w-full bg-green-500 hover:bg-green-600"
                 >
-                  <Button
-                    asChild
-                    className="w-full py-4 bg-green-500 hover:bg-green-600 text-white rounded-xl"
-                  >
-                    <a href={convertedFile} download={`converted${outputFormat}`}>
-                      <Download className="w-4 h-4 mr-2" />
-                      Download Converted File
-                    </a>
-                  </Button>
-                </motion.div>
+                  <a href={convertedFile} download={`converted${outputFormat}`}>
+                    <Download className="w-4 h-4 mr-2" />
+                    Download Converted File
+                  </a>
+                </Button>
               )}
             </div>
           </motion.div>
-        </div>
-      </div>
-    </>
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
 } 
