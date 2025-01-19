@@ -123,7 +123,7 @@ export default function ConverterPage() {
                     <>
                       <Upload className="w-12 h-12 text-gray-400 mb-2" />
                       <span className="text-sm text-gray-500">
-                        Click to upload or drag and drop
+                        Click to upload or drag and drop here
                       </span>
                       <span className="text-xs text-gray-400 mt-1">
                         Supports video, audio, and image files
