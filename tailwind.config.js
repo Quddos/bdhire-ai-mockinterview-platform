@@ -66,12 +66,56 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        roll: {
+          '0%': { 
+            transform: 'scaleX(0)',
+            opacity: '0'
+          },
+          '100%': { 
+            transform: 'scaleX(1)',
+            opacity: '1'
+          }
+        },
+        gradient: {
+          '0%, 100%': {
+            'background-size': '200% 200%',
+            'background-position': 'left center'
+          },
+          '50%': {
+            'background-size': '200% 200%',
+            'background-position': 'right center'
+          }
+        },
+        bounce: {
+          '0%, 100%': {
+            transform: 'translateY(-25%)',
+            'animation-timing-function': 'cubic-bezier(0.8, 0, 1, 1)',
+          },
+          '50%': {
+            transform: 'translateY(0)',
+            'animation-timing-function': 'cubic-bezier(0, 0, 0.2, 1)',
+          },
+        },
+        'gradient-xy': {
+          '0%, 100%': {
+            'background-size': '400% 400%',
+            'background-position': 'left center'
+          },
+          '50%': {
+            'background-size': '200% 200%',
+            'background-position': 'right center'
+          }
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        'roll': 'roll 0.4s ease-out forwards',
+        'gradient': 'gradient 3s ease infinite',
+        'bounce': 'bounce 1s infinite',
+        'gradient-xy': 'gradient-xy 15s ease infinite',
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [],
 }
