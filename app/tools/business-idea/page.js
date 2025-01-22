@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Button } from '@/components/ui/button'
 import { Loader2, Target, Users, DollarSign, Lightbulb, BarChart, ShoppingBag, TrendingUp, Download, Copy } from 'lucide-react'
 import toast from 'react-hot-toast'
+import Header from '@/components/header'
 
 const industries = [
  
@@ -168,8 +169,8 @@ export default function BusinessIdeaGenerator() {
   }
 
   return (
-    <div>
-      
+    <>
+      <Header />
       <div className="container mx-auto px-4 py-6 mt-20">
         <div className="flex flex-col lg:flex-row gap-6 max-w-[1500px] mx-auto">
           {/* Form Section */}
@@ -345,6 +346,6 @@ export default function BusinessIdeaGenerator() {
           )}
         </div>
       </div>
-    </div>
+    </>
   )
 } 
