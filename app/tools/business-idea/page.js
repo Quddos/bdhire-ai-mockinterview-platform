@@ -4,8 +4,6 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Button } from '@/components/ui/button'
 import { Loader2, Target, Users, DollarSign, Lightbulb, BarChart, ShoppingBag, TrendingUp, Download, Copy } from 'lucide-react'
 import toast from 'react-hot-toast'
-import html2pdf from 'html2pdf.js'
-
 
 const industries = [
  
@@ -149,17 +147,24 @@ export default function BusinessIdeaGenerator() {
     }
   }
 
-  const downloadAsPDF = () => {
-    const content = document.getElementById('business-idea-content')
-    const opt = {
-      margin: 1,
-      filename: 'business-idea.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+  const downloadAsPDF = async () => {
+    try {
+      const html2pdf = (await import('html2pdf.js')).default
+      
+      const content = document.getElementById('business-idea-content')
+      const opt = {
+        margin: 1,
+        filename: 'business-idea.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      }
+      html2pdf().set(opt).from(content).save()
+      toast.success('Downloading PDF...')
+    } catch (error) {
+      toast.error('Failed to download PDF')
+      console.error('PDF download error:', error)
     }
-    html2pdf().set(opt).from(content).save()
-    toast.success('Downloading PDF...')
   }
 
   return (
