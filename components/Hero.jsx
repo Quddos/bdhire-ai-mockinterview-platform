@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { QrCode, FileText, Bot, GraduationCap, Briefcase } from 'lucide-react'
+import { QrCode, FileText, Bot, GraduationCap, Briefcase, Lightbulb } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import FileConverterModal from './FileConverterModal'
@@ -86,7 +86,7 @@ const services = [
   },
   {
     icon: Briefcase,
-    name: "Job Board",
+    name: "Op2unity Abroad",
     href: "/jobs",
     bgColor: "bg-pink-100",
     iconColor: "text-pink-600"
@@ -107,10 +107,17 @@ const services = [
   },
   {
     icon: GraduationCap,
-    name: "Courses",
+    name: "Free Courses",
     href: "/courses",
     bgColor: "bg-teal-100",
     iconColor: "text-teal-600"
+  },
+  {
+    icon: Lightbulb,
+    name: "Business Ideas",
+    href: "/tools/business-idea",
+    bgColor: "bg-amber-100",
+    iconColor: "text-amber-600"
   }
 ]
 
