@@ -84,6 +84,12 @@ export default function Header() {
       icon: Lightbulb,
       href: '/tools/business-idea',
       description: 'Generate business ideas with AI'
+    },
+    {
+      name: 'Meet Anyone',
+      icon: Users,
+      href: '/meetanyone',
+      description: 'Connect with the community'
     }
   ]
 

@@ -1,5 +1,5 @@
 import { json } from "drizzle-orm/mysql-core";
-import { pgTable, serial,text, varchar } from "drizzle-orm/pg-core";
+import { pgTable, serial,text, varchar, integer } from "drizzle-orm/pg-core";
 
 export const MockInterview= pgTable('mockInterview',{
     // create columns
@@ -26,3 +26,29 @@ export const UserAnswer=pgTable('userAnswer',{
     userEmail:varchar('userEmail'),
     createdAt:varchar('createdAt'),
 })
+
+export const meetanyonepost = pgTable('meetanyonepost', {
+    id: serial('id').primaryKey(),
+    content: text('content').notNull(),
+    imageUrl: text('imageUrl'),
+    authorId: varchar('authorId').notNull(),
+    authorName: varchar('authorName').notNull(),
+    authorImage: text('authorImage'),
+    category: varchar('category').notNull(),
+    createdAt: text('createdAt').notNull(),
+    likes: text('likes').default('[]'),
+    linkUrl: text('linkUrl'),
+    linkTitle: text('linkTitle')
+})
+
+export const meetanyonecomment = pgTable('meetanyonecomment', {
+    id: serial('id').primaryKey(),
+    postId: integer('postId').references(() => meetanyonepost.id).notNull(),
+    parentCommentId: integer('parentCommentId').references(() => meetanyonecomment.id),
+    content: text('content').notNull(),
+    authorId: varchar('authorId').notNull(),
+    authorName: varchar('authorName').notNull(),
+    authorImage: text('authorImage'),
+    createdAt: text('createdAt').notNull()
+})
+
