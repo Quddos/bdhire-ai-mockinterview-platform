@@ -88,7 +88,7 @@ export default function Header() {
     {
       name: 'Meet Anyone',
       icon: Users,
-      href: '/meetanyone',
+      href: '#',
       description: 'Connect with the community'
     },
     {
