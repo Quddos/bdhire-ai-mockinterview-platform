@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { QrCode, FileText, Bot, Menu, X, Briefcase, GraduationCap, Users, Lightbulb } from 'lucide-react'
+import { QrCode, FileText, Bot, Menu, X, Briefcase, GraduationCap, Users, Lightbulb, FileSearch } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { UserButton } from '@clerk/nextjs'
@@ -84,6 +84,18 @@ export default function Header() {
       icon: Lightbulb,
       href: '/tools/business-idea',
       description: 'Generate business ideas with AI'
+    },
+    {
+      name: 'Meet Anyone',
+      icon: Users,
+      href: '#',
+      description: 'Connect with the community'
+    },
+    {
+      name: 'Resume Analyzer',
+      icon: FileSearch,
+      href: '/tools/resume-analyzer',
+      description: 'AI-powered resume analysis'
     }
   ]
 
