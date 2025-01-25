@@ -281,7 +281,7 @@ export default function ResumeAnalyzer() {
   };
 
   return (
-    <div className={`min-h-screen transition-colors duration-200 ${
+    <div className={`min-h-screen transition-colors duration-200 mt-5 ${
       theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'
     }`}>
       <div className="container mx-auto px-4 py-8">
