@@ -28,8 +28,16 @@ export async function POST(request: Request) {
         "title": string,
         "journal": string,
         "year": string,
-        "contribution": string,
-        "limitation": string,
+        "contributions": [
+          { "point": string, "description": string },
+          { "point": string, "description": string },
+          { "point": string, "description": string }
+        ],
+        "limitations": [
+          { "point": string, "description": string },
+          { "point": string, "description": string },
+          { "point": string, "description": string }
+        ],
         "areaOfFocus": string,
         "methodology": {
           "approach": string,
@@ -37,6 +45,8 @@ export async function POST(request: Request) {
         },
         "futureWork": string[]
       }
+
+      Ensure exactly 3 contributions and 3 limitations are provided, each with a brief point and detailed description.
     `;
 
     const result = await model.generateContent(prompt);
@@ -54,8 +64,10 @@ export async function POST(request: Request) {
         !analysis.title ||
         !analysis.journal ||
         !analysis.year ||
-        !analysis.contribution ||
-        !analysis.limitation ||
+        !Array.isArray(analysis.contributions) ||
+        analysis.contributions.length !== 3 ||
+        !Array.isArray(analysis.limitations) ||
+        analysis.limitations.length !== 3 ||
         !analysis.areaOfFocus ||
         !analysis.methodology ||
         !Array.isArray(analysis.methodology.tools) ||
