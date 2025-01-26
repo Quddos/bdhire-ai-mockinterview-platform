@@ -7,6 +7,7 @@ export default function ResumeAnalyzerPage() {
     <div className="min-h-screen bg-gradient-to-b  from-blue-50/50 to-white">
       <Toaster position="top-center" />
       <Header />
+      <main className="mt-[80px]">
       <div className="pt-20 pb-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Hero Section */}
