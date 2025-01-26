@@ -4,9 +4,10 @@ import { Toaster } from 'sonner'
 
 export default function ResumeAnalyzerPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50/50 to-white">
+    <div className="min-h-screen bg-gradient-to-b  from-blue-50/50 to-white">
       <Toaster position="top-center" />
       <Header />
+      <main className="mt-[80px]">
       <div className="pt-20 pb-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Hero Section */}
@@ -19,31 +20,32 @@ export default function ResumeAnalyzerPage() {
             </p>
           </div>
 
-          {/* Main Content */}
-          <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8">
-            <ResumeAnalyzer />
-          </div>
+            {/* Main Content */}
+            <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+              <ResumeAnalyzer />
+            </div>
 
-          {/* Features Section */}
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <FeatureCard 
-              title="Smart Analysis"
-              description="AI-powered analysis of your resume against job requirements"
-              icon="🎯"
-            />
-            <FeatureCard 
-              title="Skill Matching"
-              description="Identify matching and missing skills for the role"
-              icon="✨"
-            />
-            <FeatureCard 
-              title="Actionable Feedback"
-              description="Get specific recommendations to improve your resume"
-              icon="📝"
-            />
+            {/* Features Section */}
+            <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+              <FeatureCard 
+                title="Smart Analysis"
+                description="AI-powered analysis of your resume against job requirements"
+                icon="🎯"
+              />
+              <FeatureCard 
+                title="Skill Matching"
+                description="Identify matching and missing skills for the role"
+                icon="✨"
+              />
+              <FeatureCard 
+                title="Actionable Feedback"
+                description="Get specific recommendations to improve your resume"
+                icon="📝"
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   )
 }
