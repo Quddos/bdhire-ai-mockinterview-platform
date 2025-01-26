@@ -1,9 +1,9 @@
 import { MetadataRoute } from 'next'
 
-export async function GET() {
+export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://qudmeet.click'
 
-  const sitemap = [
+  return [
     {
       url: baseUrl,
       lastModified: new Date(),
@@ -41,24 +41,4 @@ export async function GET() {
       priority: 0.8,
     },
   ]
-
-  // Convert the sitemap array to XML
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
-    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-      ${sitemap.map((item) => `
-        <url>
-          <loc>${item.url}</loc>
-          <lastmod>${item.lastModified.toISOString()}</lastmod>
-          <changefreq>${item.changeFrequency}</changefreq>
-          <priority>${item.priority}</priority>
-        </url>
-      `).join('')}
-    </urlset>`
-
-  return new Response(xml, {
-    headers: {
-      'Content-Type': 'application/xml',
-      'Cache-Control': 'public, max-age=3600',
-    },
-  })
 } 

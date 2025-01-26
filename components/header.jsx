@@ -4,12 +4,13 @@ import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { QrCode, FileText, Bot, Menu, X, Briefcase, GraduationCap, Users, Lightbulb, FileSearch } from 'lucide-react'
+import { QrCode, FileText, Bot, Menu, X, Briefcase, GraduationCap, Users, Lightbulb, FileSearch, Book } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { UserButton } from '@clerk/nextjs'
 import { useAuth } from '@clerk/nextjs'
 import { usePathname } from 'next/navigation'
+
 
 const CursorIcon = () => (
   <svg 
@@ -86,10 +87,10 @@ export default function Header() {
       description: 'Generate business ideas with AI'
     },
     {
-      name: 'Meet Anyone',
-      icon: Users,
-      href: '#',
-      description: 'Connect with the community'
+      name: 'Research Analyzer',
+      description: 'Analyze research papers and extract key insights',
+      href: '/tools/research-analyzer',
+      icon: Book, // assuming you're using Lucide icons
     },
     {
       name: 'Resume Analyzer',
