@@ -9,7 +9,8 @@
     "lint": "next lint",
     "db:migrate": "node -r dotenv/config migrations/run.js",
     "db:push": "npx drizzle-kit push",
-    "db:studio": "npx drizzle-kit studio"
+    "db:studio": "npx drizzle-kit studio",
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.1.6",

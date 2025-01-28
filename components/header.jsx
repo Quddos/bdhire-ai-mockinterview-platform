@@ -114,19 +114,19 @@ export default function Header() {
     {
       name: 'Job Board',
       icon: Briefcase,
-      href: '/opportunities/jobs',
+      href: '#',
       description: 'Find your next role'
     },
     {
       name: 'Learning Path',
       icon: GraduationCap,
-      href: '/opportunities/learn',
+      href: '#',
       description: 'Grow your skills'
     },
     {
       name: 'Community',
       icon: Users,
-      href: '/opportunities/community',
+      href: '#',
       description: 'Connect with others'
     }
   ]
