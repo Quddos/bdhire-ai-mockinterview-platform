@@ -5,7 +5,7 @@ module.exports = {
   generateIndexSitemap: false,
   changefreq: 'daily',
   priority: 0.7,
-  exclude: ['/api/*', '/admin/*'], // Add paths you want to exclude
+  exclude: ['/api/*'], // Add paths you want to exclude
   robotsTxtOptions: {
     additionalSitemaps: [
       'https://qudmeet.click/server-sitemap.xml', // If you have dynamic pages
@@ -17,4 +17,5 @@ module.exports = {
       },
     ],
   },
+  outDir: './public',
 } 
