@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && next-sitemap",
     "start": "next start",
     "lint": "next lint",
     "db:migrate": "node -r dotenv/config migrations/run.js",
     "db:push": "npx drizzle-kit push",
-    "db:studio": "npx drizzle-kit studio"
+    "db:studio": "npx drizzle-kit studio",
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.1.6",
@@ -55,7 +56,8 @@
     "styled-components": "^6.1.14",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "next-sitemap": "^4.2.3"
   },
   "devDependencies": {
     "@types/react": "18.3.18",

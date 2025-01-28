@@ -38,6 +38,7 @@ export default function Header() {
   const [isToolsOpen, setIsToolsOpen] = useState(false)
   const [isOp2unityOpen, setIsOp2unityOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
 
   const headerRef = useRef(null)
 
@@ -60,6 +61,15 @@ export default function Header() {
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [])
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  // Don't render anything until mounted
+  if (!isMounted) {
+    return null // or a loading skeleton that matches server render
+  }
 
   const tools = [
     {
@@ -104,19 +114,19 @@ export default function Header() {
     {
       name: 'Job Board',
       icon: Briefcase,
-      href: '/opportunities/jobs',
+      href: '#',
       description: 'Find your next role'
     },
     {
       name: 'Learning Path',
       icon: GraduationCap,
-      href: '/opportunities/learn',
+      href: '#',
       description: 'Grow your skills'
     },
     {
       name: 'Community',
       icon: Users,
-      href: '/opportunities/community',
+      href: '#',
       description: 'Connect with others'
     }
   ]
