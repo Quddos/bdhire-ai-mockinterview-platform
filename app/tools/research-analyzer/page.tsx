@@ -1,6 +1,6 @@
 
-
 import Header from '@/components/header';
+
 import ResearchAnalyzer from '@/components/ResearchAnalyzer'
 import { Toaster } from 'sonner'
 
