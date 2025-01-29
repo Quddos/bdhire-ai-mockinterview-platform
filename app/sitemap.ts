@@ -17,10 +17,12 @@ const staticRoutes = [
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://qudmeet.click'
 
+  const currentDate = new Date().toISOString();
+
   // Generate static routes with correct type for changeFrequency
   const staticPaths: MetadataRoute.Sitemap = staticRoutes.map(route => ({
     url: `${baseUrl}${route}`,
-    lastModified: new Date(),
+    lastModified: currentDate,
     changeFrequency: 'daily' as const,
     priority: route === '' ? 1 : 0.8,
   }))
