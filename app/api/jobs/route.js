@@ -1,6 +1,6 @@
 import { db } from '@/utils/db'
 import { jobPost, notifications } from '@/utils/schema'
-import { eq } from 'drizzle-orm'
+import { eq, desc } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 import { createNotification } from '@/lib/notifications'
 
@@ -9,7 +9,9 @@ export async function GET() {
     const jobs = await db
       .select()
       .from(jobPost)
-      .orderBy(jobPost.datePosted)
+      .where(jobPost.status === 'active')
+      .orderBy(desc(jobPost.createdAt))
+
     return NextResponse.json(jobs)
   } catch (error) {
     console.error('Error fetching jobs:', error)

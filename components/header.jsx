@@ -192,6 +192,46 @@ export default function Header() {
     }
   }
 
+  // Update the notifications section in the header
+  const NotificationsDropdown = () => (
+    <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 max-h-96 overflow-y-auto z-50">
+      {unreadNotifications.length > 0 ? (
+        <>
+          {unreadNotifications.map((notification) => (
+            <Link
+              key={notification.id}
+              href={notification.link}
+              onClick={() => {
+                markAsRead(notification.id)
+                setShowNotifications(false)
+              }}
+              className="block p-4 hover:bg-gray-50 border-b last:border-b-0"
+            >
+              <h4 className="font-medium text-gray-900">{notification.title}</h4>
+              <p className="text-sm text-gray-600">{notification.message}</p>
+              <span className="text-xs text-gray-400">
+                {new Date(notification.createdAt).toLocaleDateString()}
+              </span>
+            </Link>
+          ))}
+          <div className="p-3 bg-gray-50 text-center border-t">
+            <Link
+              href="/notifications"
+              className="text-sm text-blue-600 hover:text-blue-800"
+              onClick={() => setShowNotifications(false)}
+            >
+              View all notifications
+            </Link>
+          </div>
+        </>
+      ) : (
+        <div className="p-4 text-center text-gray-500">
+          No new notifications
+        </div>
+      )}
+    </div>
+  )
+
   return (
     <header
       ref={headerRef}
@@ -315,33 +355,7 @@ export default function Header() {
                   </button>
 
                   {/* Notifications Dropdown */}
-                  {showNotifications && (
-                    <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 max-h-96 overflow-y-auto z-50">
-                      {unreadNotifications.length > 0 ? (
-                        unreadNotifications.map((notification) => (
-                          <Link
-                            key={notification.id}
-                            href={notification.link}
-                            onClick={() => {
-                              markAsRead(notification.id)
-                              setShowNotifications(false)
-                            }}
-                            className="block p-4 hover:bg-gray-50 border-b last:border-b-0"
-                          >
-                            <h4 className="font-medium text-gray-900">{notification.title}</h4>
-                            <p className="text-sm text-gray-600">{notification.message}</p>
-                            <span className="text-xs text-gray-400">
-                              {new Date(notification.createdAt).toLocaleDateString()}
-                            </span>
-                          </Link>
-                        ))
-                      ) : (
-                        <div className="p-4 text-center text-gray-500">
-                          No new notifications
-                        </div>
-                      )}
-                    </div>
-                  )}
+                  {showNotifications && <NotificationsDropdown />}
                 </div>
 
                 <UserButton afterSignOutUrl="/" />
@@ -370,34 +384,7 @@ export default function Header() {
                 </button>
 
                 {/* Mobile Notifications Dropdown */}
-                {showNotifications && (
-                  <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 max-h-96 overflow-y-auto z-50">
-                    {/* Same content as desktop notifications */}
-                    {unreadNotifications.length > 0 ? (
-                      unreadNotifications.map((notification) => (
-                        <Link
-                          key={notification.id}
-                          href={notification.link}
-                          onClick={() => {
-                            markAsRead(notification.id)
-                            setShowNotifications(false)
-                          }}
-                          className="block p-4 hover:bg-gray-50 border-b last:border-b-0"
-                        >
-                          <h4 className="font-medium text-gray-900">{notification.title}</h4>
-                          <p className="text-sm text-gray-600">{notification.message}</p>
-                          <span className="text-xs text-gray-400">
-                            {new Date(notification.createdAt).toLocaleDateString()}
-                          </span>
-                        </Link>
-                      ))
-                    ) : (
-                      <div className="p-4 text-center text-gray-500">
-                        No new notifications
-                      </div>
-                    )}
-                  </div>
-                )}
+                {showNotifications && <NotificationsDropdown />}
               </div>
             )}
             <button
