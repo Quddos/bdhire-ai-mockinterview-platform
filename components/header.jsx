@@ -4,12 +4,14 @@ import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { QrCode, FileText, Bot, Menu, X, Briefcase, GraduationCap, Users, Lightbulb, FileSearch, Book } from 'lucide-react'
+import { QrCode, FileText, Bot, Menu, X, Briefcase, GraduationCap, Users, Lightbulb, FileSearch, Book, Bell } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { UserButton } from '@clerk/nextjs'
 import { useAuth } from '@clerk/nextjs'
 import { usePathname } from 'next/navigation'
+import { getUnreadNotifications } from '@/lib/notifications'
+import Cookies from 'js-cookie'
 
 
 const CursorIcon = () => (
@@ -32,15 +34,18 @@ const CursorIcon = () => (
 )
 
 export default function Header() {
-  const { isSignedIn } = useAuth()
+  const { isSignedIn, userId } = useAuth()
   const pathname = usePathname()
   const [isScrolled, setIsScrolled] = useState(false)
   const [isToolsOpen, setIsToolsOpen] = useState(false)
   const [isOp2unityOpen, setIsOp2unityOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
+  const [unreadNotifications, setUnreadNotifications] = useState([])
+  const [showNotifications, setShowNotifications] = useState(false)
 
   const headerRef = useRef(null)
+  const notificationRef = useRef(null)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,6 +69,38 @@ export default function Header() {
 
   useEffect(() => {
     setIsMounted(true)
+  }, [])
+
+  // Notifications effect
+  const fetchNotifications = async () => {
+    try {
+      const response = await fetch('/api/notifications')
+      if (!response.ok) throw new Error('Failed to fetch notifications')
+      const data = await response.json()
+      setUnreadNotifications(data)
+    } catch (error) {
+      console.error('Error fetching notifications:', error)
+    }
+  }
+
+  useEffect(() => {
+    if (userId) {
+      fetchNotifications()
+      const interval = setInterval(fetchNotifications, 30000)
+      return () => clearInterval(interval)
+    }
+  }, [userId])
+
+  // Close notifications when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+        setShowNotifications(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
   // Don't render anything until mounted
@@ -114,13 +151,13 @@ export default function Header() {
     {
       name: 'Job Board',
       icon: Briefcase,
-      href: '#',
+      href: '/opportunities/job-board',
       description: 'Find your next role'
     },
     {
       name: 'Learning Path',
       icon: GraduationCap,
-      href: '#',
+      href: '/opportunities/learning-path',
       description: 'Grow your skills'
     },
     {
@@ -140,6 +177,60 @@ export default function Header() {
 
   const activeButtonClass = "relative before:absolute before:inset-x-0 before:bottom-0 before:h-0.5 before:bg-gradient-to-r before:from-blue-400 before:via-purple-500 before:to-pink-500 before:transform before:origin-left before:scale-x-100 before:-z-10 before:animate-roll text-blue-600"
   const inactiveButtonClass = "hover:bg-gray-100 transition-colors"
+
+  const isAdmin = Cookies.get('admin_username') === 'qudmeet_admin'
+
+  const markAsRead = async (notificationId) => {
+    try {
+      await fetch(`/api/notifications/${notificationId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+      })
+      fetchNotifications() // Refresh notifications
+    } catch (error) {
+      console.error('Error marking notification as read:', error)
+    }
+  }
+
+  // Update the notifications section in the header
+  const NotificationsDropdown = () => (
+    <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 max-h-96 overflow-y-auto z-50">
+      {unreadNotifications.length > 0 ? (
+        <>
+          {unreadNotifications.map((notification) => (
+            <Link
+              key={notification.id}
+              href={notification.link}
+              onClick={() => {
+                markAsRead(notification.id)
+                setShowNotifications(false)
+              }}
+              className="block p-4 hover:bg-gray-50 border-b last:border-b-0"
+            >
+              <h4 className="font-medium text-gray-900">{notification.title}</h4>
+              <p className="text-sm text-gray-600">{notification.message}</p>
+              <span className="text-xs text-gray-400">
+                {new Date(notification.createdAt).toLocaleDateString()}
+              </span>
+            </Link>
+          ))}
+          <div className="p-3 bg-gray-50 text-center border-t">
+            <Link
+              href="/notifications"
+              className="text-sm text-blue-600 hover:text-blue-800"
+              onClick={() => setShowNotifications(false)}
+            >
+              View all notifications
+            </Link>
+          </div>
+        </>
+      ) : (
+        <div className="p-4 text-center text-gray-500">
+          No new notifications
+        </div>
+      )}
+    </div>
+  )
 
   return (
     <header
@@ -241,17 +332,34 @@ export default function Header() {
               Sponsor Us
             </Link>
             {isSignedIn ? (
-              <>
-                <Link
-                  href="/dashboard"
-                  className={cn(
-                    'px-3 py-2 text-sm font-medium rounded-md transition-colors relative',
-                    isActive('/dashboard') ? activeButtonClass : inactiveButtonClass
-                  )}>
+              <div className="flex items-center space-x-4">
+                <Link href="/dashboard" className={cn(
+                  'px-3 py-2 text-sm font-medium rounded-md transition-colors relative',
+                  isActive('/dashboard') ? activeButtonClass : inactiveButtonClass
+                )}>
                   Dashboard
                 </Link>
+
+                {/* Notification Bell - Now part of main nav */}
+                <div className="relative" ref={notificationRef}>
+                  <button
+                    onClick={() => setShowNotifications(!showNotifications)}
+                    className="p-2 hover:bg-gray-100 rounded-full relative"
+                  >
+                    <Bell className="w-5 h-5" />
+                    {unreadNotifications.length > 0 && (
+                      <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                        {unreadNotifications.length}
+                      </span>
+                    )}
+                  </button>
+
+                  {/* Notifications Dropdown */}
+                  {showNotifications && <NotificationsDropdown />}
+                </div>
+
                 <UserButton afterSignOutUrl="/" />
-              </>
+              </div>
             ) : (
               <Button variant="default" asChild>
                 <Link href="/sign-in">Login</Link>
@@ -260,15 +368,36 @@ export default function Header() {
           </nav>
 
           {/* Mobile menu button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 rounded-md text-gray-700 hover:text-gray-900">
-            {isMobileMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
+          <div className="flex items-center md:hidden">
+            {isSignedIn && (
+              <div className="relative mr-2" ref={notificationRef}>
+                <button
+                  onClick={() => setShowNotifications(!showNotifications)}
+                  className="p-2 hover:bg-gray-100 rounded-full relative"
+                >
+                  <Bell className="w-5 h-5" />
+                  {unreadNotifications.length > 0 && (
+                    <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {unreadNotifications.length}
+                    </span>
+                  )}
+                </button>
+
+                {/* Mobile Notifications Dropdown */}
+                {showNotifications && <NotificationsDropdown />}
+              </div>
             )}
-          </button>
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 rounded-md text-gray-700 hover:text-gray-900"
+            >
+              {isMobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
@@ -338,6 +467,20 @@ export default function Header() {
                       </Button>
                     </div>
                     <div className="pt-2">
+                      <div className="relative">
+                        <button
+                          onClick={() => setShowNotifications(!showNotifications)}
+                          className="p-2 hover:bg-gray-100 rounded-full relative">
+                          <Bell className="w-5 h-5" />
+                          {unreadNotifications.length > 0 && (
+                            <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                              {unreadNotifications.length}
+                            </span>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="pt-2">
                       <UserButton afterSignOutUrl="/" />
                     </div>
                   </>
@@ -352,6 +495,16 @@ export default function Header() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Add admin dashboard link if user is admin */}
+        {isAdmin && (
+          <Link
+            href="/admin/dashboard"
+            className="ml-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Admin Dashboard
+          </Link>
+        )}
       </div>
     </header>
   );

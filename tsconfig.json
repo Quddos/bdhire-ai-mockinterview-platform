@@ -32,9 +32,12 @@
     "next-env.d.ts",
     ".next/types/**/*.ts",
     "**/*.ts",
-    "**/*.tsx"
-, "components/header.jsx"  ],
+    "**/*.tsx",
+    "components/header.jsx"
+  ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/sitemap-index.xml",
+    "**/server-sitemap.xml"
   ]
 }
